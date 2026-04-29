@@ -4,119 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Управление ПК</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-    body { font-family: 'Inter', system-ui, sans-serif; }
+    body { font-family: system-ui, sans-serif; background: #0f0f0f; color: white; padding: 20px; }
+    .card { background: #1f1f1f; margin: 15px 0; padding: 20px; border-radius: 20px; display: flex; align-items: center; gap: 15px; }
+    .card:active { transform: scale(0.95); }
   </style>
 </head>
-<body class="bg-[#0f0f0f] text-white min-h-screen">
-  <div class="max-w-md mx-auto p-4">
-    <div class="flex items-center justify-between mb-8">
-      <h1 class="text-2xl font-semibold">🖥️ Управление ПК</h1>
-      <div id="user" class="text-sm opacity-70"></div>
-    </div>
+<body>
+  <h1 style="text-align:center; margin-bottom:20px;">🖥️ Управление ПК — ДИАГНОСТИКА</h1>
+  <div id="status" style="text-align:center; color:#0f0; margin-bottom:20px;">JS загружен ✓</div>
 
-    <div class="space-y-4">
-      <div onclick="sendAction('screenshot')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center text-3xl">📸</div>
-        <div>
-          <h3 class="font-semibold text-lg">Сделать скриншот</h3>
-          <p class="text-gray-400 text-sm">Текущий экран отправится в чат</p>
-        </div>
-      </div>
-
-      <div onclick="showModal('openModal')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-green-500/20 text-green-400 rounded-2xl flex items-center justify-center text-3xl">📂</div>
-        <div>
-          <h3 class="font-semibold text-lg">Открыть приложение / файл</h3>
-          <p class="text-gray-400 text-sm">calc.exe, chrome, C:\game.exe и т.д.</p>
-        </div>
-      </div>
-
-      <div onclick="showModal('taskkillModal')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-orange-500/20 text-orange-400 rounded-2xl flex items-center justify-center text-3xl">❌</div>
-        <div>
-          <h3 class="font-semibold text-lg">Завершить процесс</h3>
-          <p class="text-gray-400 text-sm">chrome.exe, explorer.exe и т.д.</p>
-        </div>
-      </div>
-
-      <div onclick="showModal('downloadModal')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-2xl flex items-center justify-center text-3xl">⬇️</div>
-        <div>
-          <h3 class="font-semibold text-lg">Скачать файл</h3>
-          <p class="text-gray-400 text-sm">По прямой ссылке</p>
-        </div>
-      </div>
-
-      <!-- Питание -->
-      <div class="grid grid-cols-2 gap-4">
-        <div onclick="sendAction('shutdown')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 text-center active:scale-95 transition-all cursor-pointer border border-red-500/30">
-          <div class="text-4xl mb-2">⏻</div>
-          <div class="font-medium text-red-400">Выключить ПК</div>
-        </div>
-        <div onclick="sendAction('restart')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 text-center active:scale-95 transition-all cursor-pointer">
-          <div class="text-4xl mb-2">🔄</div>
-          <div class="font-medium">Перезагрузить</div>
-        </div>
-        <div onclick="sendAction('sleep')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 text-center active:scale-95 transition-all cursor-pointer">
-          <div class="text-4xl mb-2">🌙</div>
-          <div class="font-medium">Режим сна</div>
-        </div>
-        <div onclick="sendAction('cancel')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 text-center active:scale-95 transition-all cursor-pointer">
-          <div class="text-4xl mb-2">❌</div>
-          <div class="font-medium">Отменить выключение</div>
-        </div>
-      </div>
-
-      <div onclick="sendAction('dev_on')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-yellow-500/20 text-yellow-400 rounded-2xl flex items-center justify-center text-3xl">🛠️</div>
-        <div><h3 class="font-semibold text-lg">Включить режим разработчика</h3></div>
-      </div>
-      <div onclick="sendAction('dev_off')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-gray-500/20 text-gray-400 rounded-2xl flex items-center justify-center text-3xl">🛠️</div>
-        <div><h3 class="font-semibold text-lg">Выключить режим разработчика</h3></div>
-      </div>
-      <div onclick="sendAction('delete_logs')" class="bg-[#1f1f1f] hover:bg-[#2a2a2a] rounded-3xl p-6 flex items-center gap-4 active:scale-95 transition-all cursor-pointer">
-        <div class="w-12 h-12 bg-red-500/20 text-red-400 rounded-2xl flex items-center justify-center text-3xl">🗑</div>
-        <div><h3 class="font-semibold text-lg">Удалить все логи</h3></div>
-      </div>
+  <div class="card" onclick="testClick('screenshot')">
+    <span style="font-size:40px;">📸</span>
+    <div>
+      <h3>Сделать скриншот</h3>
+      <p>Нажми — должен появиться alert</p>
     </div>
   </div>
 
-  <!-- Модальные окна -->
-  <div id="openModal" class="hidden fixed inset-0 bg-black/80 flex items-end">
-    <div class="bg-[#1f1f1f] w-full rounded-t-3xl p-6">
-      <h2 class="text-xl font-semibold mb-4">Открыть</h2>
-      <input id="openInput" type="text" placeholder="calc.exe или chrome" class="w-full bg-[#2a2a2a] rounded-2xl px-4 py-4 outline-none text-white">
-      <div class="flex gap-3 mt-6">
-        <button onclick="hideModal('openModal')" class="flex-1 py-4 rounded-2xl bg-gray-700">Отмена</button>
-        <button onclick="sendOpen()" class="flex-1 py-4 rounded-2xl bg-green-600 font-medium">Открыть</button>
-      </div>
+  <div class="card" onclick="testClick('open')">
+    <span style="font-size:40px;">📂</span>
+    <div>
+      <h3>Открыть приложение</h3>
+      <p>Нажми — должен появиться alert</p>
     </div>
   </div>
 
-  <div id="taskkillModal" class="hidden fixed inset-0 bg-black/80 flex items-end">
-    <div class="bg-[#1f1f1f] w-full rounded-t-3xl p-6">
-      <h2 class="text-xl font-semibold mb-4">Завершить процесс</h2>
-      <input id="taskkillInput" type="text" placeholder="chrome.exe" class="w-full bg-[#2a2a2a] rounded-2xl px-4 py-4 outline-none text-white">
-      <div class="flex gap-3 mt-6">
-        <button onclick="hideModal('taskkillModal')" class="flex-1 py-4 rounded-2xl bg-gray-700">Отмена</button>
-        <button onclick="sendTaskkill()" class="flex-1 py-4 rounded-2xl bg-orange-600 font-medium">Завершить</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="downloadModal" class="hidden fixed inset-0 bg-black/80 flex items-end">
-    <div class="bg-[#1f1f1f] w-full rounded-t-3xl p-6">
-      <h2 class="text-xl font-semibold mb-4">Скачать файл</h2>
-      <input id="downloadInput" type="text" placeholder="https://example.com/file.exe" class="w-full bg-[#2a2a2a] rounded-2xl px-4 py-4 outline-none text-white">
-      <div class="flex gap-3 mt-6">
-        <button onclick="hideModal('downloadModal')" class="flex-1 py-4 rounded-2xl bg-gray-700">Отмена</button>
-        <button onclick="sendDownload()" class="flex-1 py-4 rounded-2xl bg-purple-600 font-medium">Скачать</button>
-      </div>
+  <div class="card" onclick="testClick('shutdown')">
+    <span style="font-size:40px;">⏻</span>
+    <div>
+      <h3>Выключить ПК</h3>
+      <p>Нажми — должен появиться alert</p>
     </div>
   </div>
 
@@ -124,39 +43,22 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
     tg.ready();
-    document.getElementById('user').textContent = tg.initDataUnsafe.user?.first_name || 'Пользователь';
+    document.getElementById('status').innerHTML = '✅ Telegram WebApp готов<br>Нажми любую карточку';
 
-    function sendAction(action) {
-      console.log("Отправляем в бот:", action);           // ← для отладки
-      tg.sendData(JSON.stringify({action: action}));
-      tg.showPopup({message: "✅ Команда отправлена в бот"});
+    function testClick(action) {
+      alert("✅ JS работает!\nДействие: " + action + "\nСейчас отправляем в бот...");
+
+      const data = action === 'open' 
+        ? {action: 'open', target: 'notepad'}
+        : {action: action};
+
+      tg.sendData(JSON.stringify(data));
+      tg.showPopup({message: "📤 Отправлено в бот: " + action});
+      console.log("Отправлено:", data);
     }
 
-    function showModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function hideModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
-
-    function sendOpen() {
-      const val = document.getElementById('openInput').value.trim();
-      if (val) tg.sendData(JSON.stringify({action: 'open', target: val}));
-      hideModal('openModal');
-      tg.showPopup({message: "Открываем..."});
-    }
-    function sendTaskkill() {
-      const val = document.getElementById('taskkillInput').value.trim();
-      if (val) tg.sendData(JSON.stringify({action: 'taskkill', process: val}));
-      hideModal('taskkillModal');
-      tg.showPopup({message: "Завершаем процесс..."});
-    }
-    function sendDownload() {
-      const val = document.getElementById('downloadInput').value.trim();
-      if (val) tg.sendData(JSON.stringify({action: 'download', url: val}));
-      hideModal('downloadModal');
-      tg.showPopup({message: "Скачиваем..."});
-    }
+    // Если хочешь видеть логи в консоли браузера (для продвинутой отладки)
+    console.log("Mini App полностью загружен");
   </script>
 </body>
 </html>
